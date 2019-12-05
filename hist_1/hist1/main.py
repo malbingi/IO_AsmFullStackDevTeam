@@ -11,10 +11,9 @@ def main():
                 files.append(os.path.join(r, file))
 
     for f in files:
-        cs = CodeReader(f)
-        cs.load_file_data()
+        cs = CodeReader(f, path)
 
-        print(cs.get_name())
+        print("========= File: " + cs.get_name() + " ================")
         if len(cs.get_imports()) == 0:
             print("No imports\n\n")
 
