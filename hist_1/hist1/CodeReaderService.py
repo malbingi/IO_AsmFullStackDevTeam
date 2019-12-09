@@ -85,7 +85,6 @@ class ImportInfo:
             return self.name + " - [lib]"
 
 
-
 class FileRefImport:
     def __init__(self, reference_name):
         self.reference_name = reference_name
