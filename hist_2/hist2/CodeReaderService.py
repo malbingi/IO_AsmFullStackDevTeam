@@ -1,5 +1,18 @@
 import os
 import re
+import enum
+
+
+class CallRefType(enum.Enum):
+    DEFINITION = 0
+    CLASS = 1
+
+
+class EndType(enum.Enum):
+    Not_end = 1
+    Next_def_block = 2
+    Next_class_block = 3
+    End_block = 4
 
 
 class CodeReader:
@@ -8,7 +21,7 @@ class CodeReader:
     Methods = {}
     CodeReaders = {}
 
-    def __init__(self, _file_path, source_folder="\\resources", load_class=0, auto_load=1):
+    def __init__(self, _file_path, source_folder="\\resources", if_load_classes=0, auto_load=1):
         CodeReader.CodeReaders[CodeReader.Code_counter] = self
         self.index = CodeReader.Code_counter
         CodeReader.Code_counter += 1
@@ -19,12 +32,13 @@ class CodeReader:
         self.lines_counter = 0
         self.imports = []
         self.files = []
-        
+
         # = hist2
-        self.load_classes = load_class
-        self.is_in_class = 0
+        self.if_load_classes = if_load_classes
+        self.is_in_class = -1
         self.is_in_def = -1
         self.actual_method_stack = []
+        self.actual_class_stack = []
         self.reader = {}
         if auto_load == 1:
             self.load_file_data()
@@ -38,8 +52,9 @@ class CodeReader:
                 self.lines_counter += 1
                 if line.__contains__("class "):
                     # create class obj === Todo hist 3
-                    self.is_in_class = 1
-                elif self.is_in_class == 0 and line.__contains__("def "):
+                    self.is_in_class += 1
+                    iterator = self.load_class(iterator)
+                elif self.is_in_class < 0 and line.__contains__("def "):
                     self.is_in_def += 1
                     iterator = self.load_method(iterator)
                 elif line.__contains__("import"):
@@ -62,19 +77,34 @@ class CodeReader:
         self.actual_method_stack.append(MethodInfo(self.reader[index], CodeReader.Method_counter, self.index))
         CodeReader.Methods[CodeReader.Method_counter] = self.actual_method_stack[self.is_in_def]
         CodeReader.Method_counter += 1
-        index += 1
-        while index < len(self.reader):
-            cond = self.check_is_end_of_block(index)
-            if cond.end_type is EndType.End_block:
-                break
-            elif cond.end_type is EndType.Next_block:
-                self.is_in_def += 1
-                index = self.load_method(cond.index)
-            self.check_if_using_any_method(self.reader[index])
-            self.check_refs(self.reader[index])
-            index += 1
+        index = self.read_line_in_block(index)
         self.actual_method_stack.pop()
         self.is_in_def -= 1
+        return index
+
+    def load_class(self, index):
+        self.actual_class_stack.append(ClassInfo(self.reader[index], self.index))
+        index = self.read_line_in_block(index, CallRefType.CLASS)
+        self.actual_class_stack.pop()
+        self.is_in_class -= 1
+        return index
+
+    def read_line_in_block(self, index, block_type=CallRefType.DEFINITION):
+        index += 1
+        while index < len(self.reader):
+            self.check_if_using_any_method(self.reader[index])
+            self.check_refs(self.reader[index])
+            cond = self.check_is_end_of_block(index, block_type)
+            if cond.end_type is EndType.End_block:
+                break
+            elif cond.end_type is EndType.Next_def_block\
+                    and block_type is CallRefType.DEFINITION:
+                self.is_in_def += 1
+                index = self.load_method(cond.index)
+            elif cond.end_type is EndType.Next_class_block:
+                self.is_in_class += 1
+                index = self.load_class(cond.index)
+            index += 1
         return index
 
     def check_is_local(self, im_info):
@@ -93,26 +123,35 @@ class CodeReader:
                 return 1
         return 0
 
-    def check_is_end_of_block(self, index):
-        iterator = 0
+    def check_is_end_of_block(self, index, block_type=CallRefType.DEFINITION):
+        if block_type == CallRefType.DEFINITION:
+            act_obj = self.actual_method_stack[self.is_in_def]
+        else:
+            act_obj = self.actual_class_stack[self.is_in_class]
+        iterator = index
         end_ln = 0
         new_block = 0
         end_block = 0
-        while index < len(self.reader) and new_block == 0 and end_block == 0 and iterator <= end_ln:
-            if self.reader[index+iterator].replace('\t', '').replace(' ', '') == '\n':
+        while iterator < len(self.reader) and new_block == 0 and end_block == 0 and iterator-index <= end_ln:
+            if self.reader[iterator].replace('\t', '').replace(' ', '') == '\n':
                 end_ln += 1
-            elif int(re.search(r'[^ ]', self.reader[index+iterator]).start()) <= self.actual_method_stack[self.is_in_def].spaces:
+            elif int(re.search(r'[^ ]', self.reader[iterator]).start()) <= act_obj.spaces:
                 end_block = 1
                 break
-            elif self.reader[index+iterator].__contains__("def ") or self.reader[index+iterator].__contains__("class "):
+            elif self.reader[iterator].__contains__("def "):
                 new_block = 1
+                break
+            elif self.reader[iterator].__contains__("class "):
+                new_block = 2
                 break
             iterator += 1
 
         if end_block == 1:
-            return ConditionEofBlock(EndType.End_block, iterator+index)
+            return ConditionEofBlock(EndType.End_block, iterator)
         elif new_block == 1:
-            return ConditionEofBlock(EndType.Next_block, iterator+index)
+            return ConditionEofBlock(EndType.Next_def_block, iterator)
+        elif new_block == 2:
+            return ConditionEofBlock(EndType.Next_class_block, iterator)
         else:
             return ConditionEofBlock(EndType.Not_end, 0)
 
@@ -149,7 +188,7 @@ class ImportInfo:
                     self.name = names[1].replace(' ', '')
                 else:
                     self.name = names[0].split(' ')[1].replace(' ', '')
-                
+
             else:
                 self.name = names[0].replace("from", '').replace(' ', '')
             for r_n in names[1].split(','):
@@ -184,28 +223,39 @@ class MethodInfo:
     def increase_counter(self):
         self.call_count += 1
 
-    def add_call_ref(self, index):
-        if index in self.call_reference:
-            self.call_reference.get(index).increase_call_counter()
-        else:
-            self.call_reference[index] = MethodCallRef(index)
+    # call_obj_type ----> 0 - def, 1 - class
+    def add_call_ref(self, index, call_obj_type=CallRefType.DEFINITION):
+        if call_obj_type == CallRefType.DEFINITION:
+            if index in self.call_reference:
+                self.call_reference.get(index).increase_call_counter()
+            else:
+                self.call_reference[index] = CallRef(index)
+        elif call_obj_type == CallRefType.CLASS:
+            if index in self.call_reference:
+                self.call_reference.get(index).increase_call_counter()
+            else:
+                self.call_reference[index] = CallRef(index, CallRefType.CLASS)
 
 
-class MethodCallRef:
-    def __init__(self, index):
+class CallRef:
+    def __init__(self, index, type=CallRefType.DEFINITION):
         self.index = index
+        self.type = type
         self.call_count = 1
 
     def increase_call_counter(self):
         self.call_count += 1
 
-import enum
-class EndType(enum.Enum):
-    Not_end = 1
-    Next_block = 2
-    End_block = 3
 
 class ConditionEofBlock:
     def __init__(self, end_type, index):
         self.end_type = end_type
         self.index = index
+
+
+class ClassInfo:
+    def __init__(self, line, f_index):
+        self.file_index = f_index
+        self.spaces = re.search(r'[^ ]', line).start()
+        s_ind = line.find("class ", 0, line.__len__())
+        self.name = line[s_ind + 6:].split(':')[0]
