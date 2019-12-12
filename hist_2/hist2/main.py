@@ -1,4 +1,4 @@
-from CodeReaderService import CodeReader
+from packages.CodeReaderService import CodeReader, reload_counters
 import os
 
 
@@ -10,9 +10,13 @@ def main():
             if '.py' in file:
                 files.append(os.path.join(r, file))
 
+    code_readers = []
     for f in files:
-        cs = CodeReader(f, path)
+        code_readers.append(CodeReader(f, path))
 
+    reload_counters()
+    for cs in code_readers:
+        cs.check_references()
         # print("========= File: " + cs.get_name() + " ================")
         # if len(cs.get_imports()) == 0:
         #     print("No imports\n\n")
@@ -27,11 +31,12 @@ def main():
         #     print(print_str)
 
     for m in CodeReader.Methods.values():
-        print_str = "Name: " + str(m.index) + ' - ' + m.name + "\n[file, called] - [" \
-                    + str(CodeReader.CodeReaders.get(m.file_index).filename) + ', ' + str(m.call_count) + "]\n"
-        for k, v in m.call_reference.items():
-            print_str += "\tMethod: " + str(CodeReader.Methods[k].name) + " was called - " + str(v.call_count) + "\n"
-        print(print_str)
+        if not m.is_class_method:
+            print_str = "Name: " + str(m.index) + ' - ' + m.name + "\n[file, called] - [" \
+                        + str(CodeReader.CodeReaders.get(m.file_index).filename) + ', ' + str(m.call_count) + "]\n"
+            for k, v in m.call_reference.items():
+                print_str += "\tMethod: " + str(k) + " - " + str(CodeReader.Methods[k].name) + " was called - " + str(v.call_count) + "\n"
+            print(print_str)
 
 
 if __name__ == "__main__":

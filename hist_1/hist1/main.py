@@ -1,4 +1,4 @@
-from CodeReaderService import CodeReader
+from packages.CodeReaderService import CodeReader, reload_counters
 import os
 
 
@@ -10,8 +10,13 @@ def main():
             if '.py' in file:
                 files.append(os.path.join(r, file))
 
+    code_readers = []
     for f in files:
-        cs = CodeReader(f, path)
+        code_readers.append(CodeReader(f, path))
+
+    reload_counters()
+    for cs in code_readers:
+        cs.check_references()
 
         print("========= File: " + cs.get_name() + " ================")
         if len(cs.get_imports()) == 0:
