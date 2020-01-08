@@ -1,0 +1,18 @@
+// References graph
+digraph {
+	"cli.py" [label="cli.py"]
+	"cli.py" -> "logger.py" [label=1]
+	"colormap.py" [label="colormap.py"]
+	"escapeseq.py" [label="escapeseq.py"]
+	"escapeseq.py" -> "colormap.py" [label=6]
+	"logger.py" [label="logger.py"]
+	"logger.py" -> "escapeseq.py" [label=6]
+	"renderer.py" [label="renderer.py"]
+	"renderer.py" -> "styler.py" [label=3]
+	"renderer.py" -> "escapeseq.py" [label=2]
+	"styler.py" [label="styler.py"]
+	"styler.py" -> "escapeseq.py" [label=2]
+	"styler.py" -> "colormap.py" [label=1]
+	"__init__.py" [label="__init__.py"]
+	"__init__.py" -> "renderer.py" [label=0]
+}
