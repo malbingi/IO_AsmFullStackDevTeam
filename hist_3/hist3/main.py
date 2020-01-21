@@ -1,6 +1,9 @@
-from packages.CodeReaderService import CodeReader, get_method_from_class_key, reload_counters
 import os
+
 import graphviz
+
+from packages.CodeReaderService import CodeReader, get_method_from_class_key, reload_counters
+
 
 def main():
     path = "..\\..\\hist_1\\hist1\\resources"

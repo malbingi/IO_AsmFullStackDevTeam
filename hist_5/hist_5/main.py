@@ -9,7 +9,7 @@ def main():
     path = "..\\..\\hist_1\\hist1\\resources"
     files = []
     dict = {}
-
+    dict_with_relationships = {}
     for r, d, f in os.walk(path):
         for file in f:
             if '.py' in file:
@@ -28,17 +28,26 @@ def main():
             print_str = "Name: " + str(m.index) + ' - ' + m.name + "\n[file, called] - [" \
                         + str(CodeReader.CodeReaders.get(m.file_index).filename) + ', ' + str(m.call_count) + "]\n"
             elements = []
+            dict_with_relationships[m.name] = str(CodeReader.CodeReaders.get(m.file_index).filename)
             for k, v in m.call_reference.items():
-                print_str += "\tMethod: " + str(k) + " - " + str(CodeReader.Methods[k].name) + " was called - " + str(v.call_count) + "\n"
+                print_str += "\tMethod: " + str(k) + " - " + str(CodeReader.Methods[k].name) + " was called - " + str(
+                    v.call_count) + "\n"
                 elements.append([CodeReader.Methods[k].name, v.call_count])
+                dict_with_relationships[CodeReader.Methods[k].name] = str(
+                    CodeReader.CodeReaders.get(m.file_index).filename)
             dict[m.name] = elements
             print(print_str)
+        else:
+            dict_with_relationships[m.name] = str(CodeReader.CodeReaders.get(m.file_index).filename)
 
-    dot = graphviz.Digraph(comment='References graph')
-    for item in dict:
-        dot.node(item, item)
-        for child in dict[item]:
-            dot.edge(item, child[0], str(child[1]))
+    del dict_with_relationships['GLOBAL']
+    print(dict_with_relationships)
+
+    dot = graphviz.Digraph(comment='Relationships between methods and files(in Python files are modules)')
+    for item in dict_with_relationships:
+        dot.node(item, color='blue')
+        dot.node(dict_with_relationships.get(item, ""), shape='square', color='red')
+        dot.edge(item, dict_with_relationships.get(item), color='blue')
     dot.render('test-output/round-table.gv', view=True)
 
 
