@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Project Author="pawel" CommentTableSortAscending="false" CommentTableSortColumn="Date Time" Description="&lt;html&gt;&#10;  &lt;head&gt;&#10;    &lt;style type=&quot;text/css&quot;&gt;&#10;      &lt;!--&#10;        body { color: #000000; font-family: Dialog; font-size: 12px }&#10;      --&gt;&#10;    &lt;/style&gt;&#10;    &#10;  &lt;/head&gt;&#10;  &lt;body&gt;&#10;  &lt;/body&gt;&#10;&lt;/html&gt;&#10;" DocumentationType="html" ExportedFromDifferentName="false" ExporterVersion="16.1.1" Name="untitled" TextualAnalysisHighlightOptionCaseSensitive="false" UmlVersion="2.x" Xml_structure="simple">
+	<Models>
+    <!--DATA TYPE MODELS-->
+		<DataType BacklogActivityId="0" Documentation_plain="" Id="booleanId" Name="boolean" PmAuthor="pawel" PmCreateDateTime="2020-01-22T18:53:13.560" PmLastModified="2020-01-22T18:53:25.895" QualityReason_IsNull="true" QualityScore="-1" UserIDLastNumericValue="0" UserID_IsNull="true"/>
+		<DataType BacklogActivityId="0" Documentation_plain="" Id="byteId" Name="byte" PmAuthor="pawel" PmCreateDateTime="2020-01-22T18:53:13.561" PmLastModified="2020-01-22T18:53:25.880" QualityReason_IsNull="true" QualityScore="-1" UserIDLastNumericValue="0" UserID_IsNull="true"/>
+		<DataType BacklogActivityId="0" Documentation_plain="" Id="cgarId" Name="char" PmAuthor="pawel" PmCreateDateTime="2020-01-22T18:53:13.562" PmLastModified="2020-01-22T18:53:25.908" QualityReason_IsNull="true" QualityScore="-1" UserIDLastNumericValue="0" UserID_IsNull="true"/>
+		<DataType BacklogActivityId="0" Documentation_plain="" Id="doubleId" Name="double" PmAuthor="pawel" PmCreateDateTime="2020-01-22T18:53:13.562" PmLastModified="2020-01-22T18:53:25.908" QualityReason_IsNull="true" QualityScore="-1" UserIDLastNumericValue="0" UserID_IsNull="true"/>
+		<DataType BacklogActivityId="0" Documentation_plain="" Id="floatId" Name="float" PmAuthor="pawel" PmCreateDateTime="2020-01-22T18:53:13.563" PmLastModified="2020-01-22T18:53:25.900" QualityReason_IsNull="true" QualityScore="-1" UserIDLastNumericValue="0" UserID_IsNull="true"/>
+		<DataType BacklogActivityId="0" Documentation_plain="" Id="intId" Name="int" PmAuthor="pawel" PmCreateDateTime="2020-01-22T18:53:13.564" PmLastModified="2020-01-22T18:53:25.902" QualityReason_IsNull="true" QualityScore="-1" UserIDLastNumericValue="0" UserID_IsNull="true"/>
+		<DataType BacklogActivityId="0" Documentation_plain="" Id="longId" Name="long" PmAuthor="pawel" PmCreateDateTime="2020-01-22T18:53:13.564" PmLastModified="2020-01-22T18:53:25.902" QualityReason_IsNull="true" QualityScore="-1" UserIDLastNumericValue="0" UserID_IsNull="true"/>
+		<DataType BacklogActivityId="0" Documentation_plain="" Id="shortId" Name="short" PmAuthor="pawel" PmCreateDateTime="2020-01-22T18:53:13.565" PmLastModified="2020-01-22T18:53:25.887" QualityReason_IsNull="true" QualityScore="-1" UserIDLastNumericValue="0" UserID_IsNull="true"/>
+		<DataType BacklogActivityId="0" Documentation_plain="" Id="voidId" Name="void" PmAuthor="pawel" PmCreateDateTime="2020-01-22T18:53:13.566" PmLastModified="2020-01-22T18:53:25.887" QualityReason_IsNull="true" QualityScore="-1" UserIDLastNumericValue="0" UserID_IsNull="true"/>
+		<DataType BacklogActivityId="0" Documentation_plain="" Id="stringId" Name="string" PmAuthor="pawel" PmCreateDateTime="2020-01-22T18:53:13.566" PmLastModified="2020-01-22T18:53:25.923" QualityReason_IsNull="true" QualityScore="-1" UserIDLastNumericValue="0" UserID_IsNull="true"/>
+        
+        <!--CLASS MODEL-->
+        <Class Id="class_Id" Leaf="false" Name="class name" Root="false" Visibility="public">
+           <ModelChildren>
+             <!--ADD METHODS-->
+				     <Operation ConnectToCodeModel="1" Id="method_Id" Name="method_name" Scope="instance" Static="false" Visibility="public" Visible="true">
+					     <ReturnType>
+						     <DataType Idref="method_dataType_Id" Name="method_dataType_name"/>
+					     </ReturnType>
+					     <ModelChildren>
+                 <!--ADD METHODS PARAMETER-->
+						     <Parameter Direction="metchod_paremeter_direction" Id="method_parameter_Id" Name="method_parameter_name">
+							     <Type>
+								     <DataType Idref="method_parameter_dataType_Id" Name="method_parameter_dataType_name"/>
+							     </Type>
+						     </Parameter>
+					     </ModelChildren>
+				     </Operation>
+			     </ModelChildren>
+         </Class>
+
+        <!--RELATIONS MODEL-->    
+        <ModelRelationshipContainer Id="relations_Id" Name="relations_name" >
+			    <ModelChildren>
+				    <ModelRelationshipContainer>
+					    <ModelChildren>
+						    <Association Direction="From To" Id="association_1_Id_" >
+                  <!--FROM-->
+							    <FromEnd>
+								    <AssociationEnd ConnectToCodeModel="1" EndModelElement="first_class_FromEnd_Id" Id="AssociationEnd_FromEnd_Id" Navigable="Navigable" >
+									    <Qualifier>
+										    <Qualifier Id="qualifier_FromEnd_Id"/>
+									    </Qualifier>
+									    <Type>
+										    <Class Idref="class_FromEnd_Id" Name="class_FromEnd_name"/>
+									    </Type>
+								     </AssociationEnd>
+							      </FromEnd>
+                    <!--TO END-->
+							      <ToEnd>
+								      <AssociationEnd ConnectToCodeModel="1" EndModelElement="class_ToEnd_Id" Id="AssociationEnd_ToEnd_Id" Navigable="Navigable" >
+									      <Qualifier>
+										      <Qualifier Id="qualifier_ToEnd_Id"/>
+									      </Qualifier>
+									        <Type>
+										        <Class Idref="class_ToEnd_Id" Name="class_ToEnd_name"/>
+									        </Type>
+								        </AssociationEnd>
+							        </ToEnd>					
+						        </Association>
+					        </ModelChildren>
+				        </ModelRelationshipContainer>
+			        </ModelChildren>
+		        </ModelRelationshipContainer>
+	</Models>
+  
+  <!--Diagram-->
+	<Diagrams>
+		<ClassDiagram Editable="true" Id="Diagram_Id" Name="Diagram_name">
+      <!--SHAPES-->
+			<Shapes>
+				<Class CreatorDiagramType="ClassDiagram" Width="80" Height="40" X="0" Y="0" Id="1_im" MetaModelElement="klasa1" Model="klasa1" Name="Class">					
+					<Caption Height="16" Visible="true" Width="80" X="0" Y="0"/>					
+				</Class>
+                <Class CreatorDiagramType="ClassDiagram" Width="80" Height="40" X="100" Y="100" Id="2_im" MetaModelElement="klasa2" Model="klasa2" Name="Class 2">					
+					<Caption Height="16" Visible="true" Width="80" X="0" Y="0"/>					
+				</Class>
+                <Class CreatorDiagramType="ClassDiagram" Width="80" Height="40" X="200" Y="200" Id="3_im" MetaModelElement="klasa3" Model="klasa3" Name="Class 3">					
+					<Caption Height="16" Visible="true" Width="80" X="0" Y="0"/>					
+				</Class>
+			</Shapes>
+      <!--ASOCIATION MODEL-->
+      <Connectors>
+				<Association Height="116" Id="4IlLc_aD.AACAQfx" MetaModelElement="associationId_1" Model="associationId_1" Width="77" X="151" Y="111" ZOrder="8">
+					<ElementFont Color="rgb(0, 0, 0)" Name="Dialog" Size="11" Style="0"/>
+					<Line Cap="0" Color="rgb(0, 0, 0)" Transparency="0" Weight="1.0">
+						<Stroke/>
+					</Line>
+					<Caption Height="0" InternalHeight="-2147483648" InternalWidth="-2147483648" Side="None" Visible="true" Width="20" X="189" Y="169"/>
+					<Points>
+						<Point X="180.0" Y="141.0"/>
+						<Point X="199.0" Y="198.0"/>
+					</Points>
+				</Association>
+			</Connectors>
+		</ClassDiagram>
+	</Diagrams>
+</Project>

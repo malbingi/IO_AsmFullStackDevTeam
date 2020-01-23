@@ -54,8 +54,9 @@ def main():
             class_content.append([m.name, m.call_count])
             references = []
             for k in m.call_reference.keys():
-
+                """Check key type"""
                 if type(k) is not int:
+                    """Check global / local"""
                     if k.find("-") > -1:
                         k = get_method_from_class_key(k)
                 references.append([CodeReader.Methods[k].name, CodeReader.Methods[k].call_count])
