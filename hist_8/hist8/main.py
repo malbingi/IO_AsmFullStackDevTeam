@@ -9,7 +9,7 @@ def main():
     if os.name == 'posix':
         path = "../../hist_1/hist1/resources"
     else:
-        path = "../../hist_1/hist1/resources"
+        path = "..\\..\\hist_1\\hist1\\resources"
 
     files = []
     dict = {}
